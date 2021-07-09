@@ -1,4 +1,5 @@
-const hre = require("hardhat");
+
+const fs = require('fs');
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -9,9 +10,9 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to depl
-  const Token = await hre.ethers.getContractFactory("Token");
+  const Token = await ethers.getContractFactory("Token");
 
-  const Planner = await hre.ethers.getContractFactory("Planner");
+  const Planner = await ethers.getContractFactory("Planner");
 
   const token = await Token.deploy();
 
@@ -27,7 +28,13 @@ async function main() {
 
   token.transfer(planner.address,1000000)
 
- 
+  const data = {
+    address: planner.address,
+    abi: JSON.parse(planner.interface.format('json'))
+  };
+  fs.writeFileSync('ui/src/Token.json', JSON.stringify(data)); 
+
+
 
 
     console.log("token address:",token.address)
